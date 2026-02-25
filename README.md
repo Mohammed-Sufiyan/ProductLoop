@@ -48,11 +48,11 @@ This project was designed to demonstrate:
 
 <p align="center">
   <img src="assets/screenshots/webview.png" width="260"/>
-  <img src="assets/screenshots/history.png" width="260"/>
+  <img src="assets/screenshots/History.png" width="260"/>
 </p>
 
 <p align="center">
-  <img src="assets/screenshots/favorites.png" width="260"/>
+  <img src="assets/screenshots/Favorites.png" width="260"/>
 </p>
 
 ---
