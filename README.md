@@ -192,5 +192,5 @@ ProductLoop prioritizes engineering clarity over unnecessary complexity, deliver
 ## 👨‍💻 Author
 
 Built with care by  
-**Mohammed Sufiyan**
+<em><b>Mohammed Sufiyan</b></em>
 
