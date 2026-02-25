@@ -1,66 +1,196 @@
-# ProductLoop
-**Discover smarter with every tap.**
+<h1 align="center"> ♾️ ProductLoop</h1>
 
-## 1. Overview
-ProductLoop is a Flutter application built as a technical evaluation submission. It provides a seamless product discovery experience by integrating with the FakeStoreAPI (and DummyJSON API), allowing users to browse a dynamic feed of products, view details via an in-app browser, and manage their preferences. The app organizes product history, user likes/dislikes, category filtering, and offline support into a premium, cohesive interface.
+<p align="center">
+  <em>Discover Smarter with Every Tap</em>
+</p>
 
-## 2. Approach
-The application adheres to a clean, feature-based architecture to ensure maintainability and strict separation of concerns. 
-- **Structure:** The codebase is divided into clear feature domains (`products`, `browser`, `preferences`, `splash`, `dashboard`) rather than technical layers, making it easier to scale and locate logic.
-- **Data Flow & Repository Pattern:** A Repository pattern is used to abstract the data layer (Dio for network requests and Hive for local caching). The UI never communicates directly with the API; it observes state exposed by Riverpod providers, which internally coordinate with the repositories. This ensures that offline fallbacks and data mapping are handled invisibly to the presentation layer.
+<p align="center"> A clean and structured Flutter application built as part of a technical evaluation challenge.  
+ProductLoop demonstrates real-world mobile engineering concepts including API integration, structured state management, local persistence, and in-app browsing.</p>
 
-## 3. State Management Choice
-I chose **Riverpod** for state management because of its compile-time safety and predictable asynchronous data handling.
-- **Predictability:** Riverpod eliminates the `ProviderNotFoundException` common in traditional Provider setups and ensures providers are always available when requested.
-- **Separation from UI:** State logic lives entirely outside the widget tree, keeping the UI declarative and clean.
-- **Scalability & Testability:** By providing a structured way to manage global state, dependency injection, and async operations, Riverpod scales effortlessly and simplifies unit testing by allowing straightforward overriding of providers.
+---
 
-## 4. Data Persistence Method
-For local data persistence, I opted for **Hive**.
-- **Lightweight & Fast:** Hive is a NoSQL, synchronous key-value database written purely in Dart. It completely avoids the overhead and asynchronous boilerplate of SQLite/sqflite.
-- **Simplicity:** It fits the app's persistence needs perfectly. Global settings (dark mode), user "likes/dislikes", and application onboarding flags are stored natively as simple key-value pairs. 
-- **History Tracking:** The browsing history is serialized into JSON payloads and stored chronologically in a dedicated Hive box, ensuring that past viewed products load instantly, even offline, across app restarts.
+## 🧠 Overview
 
-## 5. Handling Loading and Errors
-A robust user experience demands graceful degradation during network failures or loading states.
-- **AsyncValue:** Riverpod's `AsyncValue` is used heavily to declaratively transition the UI between `.data`, `.loading` (showing skeleton shimmer loaders), and `.error` states.
-- **Defensive API Handling:** The `ApiClient` (powered by Dio) catches specific `DioException` types (timeouts, bad responses, connection errors) and translates them into readable, user-friendly exception messages.
-- **Offline Fallback:** If the API fails entirely, the repositories automatically fall back to serving cached JSON payloads from Hive, preventing hard crashes and keeping the core feed functional.
+ProductLoop provides a streamlined product discovery experience. Users can browse products from a remote API, react to them (like/dislike), open product pages inside an internal WebView, and revisit previously viewed items via browsing history.
 
-## 6. Folder Structure
-The app uses a modular, feature-first folder structure:
+All user interactions persist locally, ensuring continuity even after app restarts.
 
-```text
-lib/
-├── core/
-│   ├── api/           # Dio client configurations and interceptors
-│   ├── providers/     # Global structural providers (theme, bottom nav)
-│   └── storage/       # Hive local storage service implementation
-├── features/
-│   ├── browser/       # In-App WebView and History tracking
-│   ├── dashboard/     # Main bottom navigation shell frame
-│   ├── favorites/     # Filtered list of persistent liked products
-│   ├── intro/         # First-time user onboarding experience
-│   ├── preferences/   # Like/Dislike state logic
-│   ├── products/      # Feed, Repositories, Models, Filtering logic
-│   └── splash/        # Animated initial load screen
-└── main.dart          # Entry point and thematic setup
-```
-This division ensures that each feature is self-contained with its own models, repositories, and UI components.
+This project was designed to demonstrate:
 
-## 7. What I Would Improve With More Time
-Given more time, I would focus on the following engineering and UX refinements:
-- **Better Caching Strategy & Offline-first Support:** Implement a robust offline-first synchronization strategy using a local SQLite database (via Drift or Isar) to properly handle paginated data caching, rather than raw JSON blob caching.
-- **Unit & Widget Tests:** Write comprehensive unit tests for the repositories/providers, and widget tests for the core UI flows (like the product feed and simulated history navigation).
-- **Search Optimization:** Currently, search is performed locally on the fetched list. Adding a debouncer for the search input and moving search logic to a paginated backend query would improve performance on larger datasets.
-- **Architecture Refinement:** Extract standard spacing, typography, and color tokens into a strictly enforced `AppTheme` class to remove inline styling throughout widgets.
-- **Improved Animations:** Add `Hero` transitions between the product feed and the detail view for a more fluid navigational feel.
+- Clean and maintainable architecture  
+- Proper separation of concerns  
+- Predictable asynchronous state handling  
+- Local data persistence  
+- Structured feature modularization  
 
-## 8. Approximate Time Spent
-The development of this project took approximately 12.5 hours in total, broken down as follows:
-- **Setup, Architecture Planning & Theming:** 1.5 hours
-- **API Integration & Repositories (Dio):** 2.5 hours
-- **State Management (Riverpod):** 2.0 hours
-- **Persistence & Offline Caching (Hive):** 2.0 hours
-- **Internal WebView & History Routing:** 2.5 hours
-- **UI Polishing, Animations, & Testing:** 2.0 hours
+---
+
+## ✨ Features
+
+- 🛍️ Dynamic product feed (FakeStoreAPI)  
+- 👍 Like / 👎 Dislike interaction  
+- 💾 Persistent preferences (Hive)  
+- 🌐 Internal WebView product browsing  
+- 🕘 Browsing history tracking  
+- 🔄 Pull-to-refresh  
+- ⚡ Optimistic UI updates  
+- 📡 Loading & error handling with retry  
+- 🧩 Modular feature-first architecture  
+
+---
+
+## 📸 Screenshots
+
+<p align="center">
+  <img src="assets/screenshots/feed.png" width="260"/>
+  <img src="assets/screenshots/preferences.png" width="260"/>
+</p>
+
+<p align="center">
+  <img src="assets/screenshots/webview.png" width="260"/>
+  <img src="assets/screenshots/history.png" width="260"/>
+</p>
+
+<p align="center">
+  <img src="assets/screenshots/favorites.png" width="260"/>
+</p>
+
+---
+
+## 🏗 Architecture & Approach
+
+The app follows a feature-first modular architecture with strict separation of concerns.
+
+### 🔁 Data Flow
+
+API → Repository → Riverpod Provider → UI
+
+- The UI does not directly call APIs  
+- Repositories abstract network and storage logic  
+- Providers manage state transitions  
+- Widgets remain declarative and focused on presentation  
+
+This ensures maintainability, predictable state updates, and scalability.
+
+---
+
+## ⚙️ State Management — Riverpod
+
+Riverpod was chosen for:
+
+- 🧼 Clean separation from UI  
+- 🔄 Declarative async handling via `AsyncValue`  
+- 📦 Centralized dependency management  
+- 📈 Easy scalability  
+
+All business logic resides outside widgets, keeping UI purely reactive.
+
+---
+
+## 💾 Data Persistence — Hive
+
+Hive was used for lightweight local storage.
+
+### Why Hive?
+
+- 🚀 Fast key-value storage  
+- 🧩 Minimal setup  
+- 📱 Ideal for simple persistence needs  
+
+Stored data includes:
+
+- 👍 Liked / 👎 Disliked product IDs  
+- 🕘 Browsing history URLs  
+
+All preferences persist across app restarts.
+
+---
+
+## 🌐 WebView & History Tracking
+
+When a product is tapped:
+
+- Opens inside an internal WebView  
+- URL is tracked automatically  
+- History is stored locally  
+- Users can revisit previously viewed products  
+
+History is displayed in a dedicated screen with the option to clear it.
+
+---
+
+## 🛠 Handling Loading & Errors
+
+To ensure reliability:
+
+- `AsyncValue` manages loading/data/error states  
+- Clear loading indicators are displayed  
+- Retry option on failure  
+- Defensive API handling with Dio  
+
+Error states are surfaced to users with clear retry actions rather than silent failures.
+
+---
+
+## 📂 Folder Structure
+<img width="1756" height="2078" alt="productloop" src="https://github.com/user-attachments/assets/0f9b7f4a-dc0e-4fcf-9e7d-888c55cf07eb" />
+
+Each feature is self-contained with its own models, providers, repository logic, and UI components.
+
+---
+
+## ⚖️ Trade-offs
+
+Given the limited development time, the focus was placed on clean architecture and stable functionality rather than advanced UI animations or complex offline-first synchronization.
+
+Some advanced optimizations such as paginated caching and deeper testing coverage were intentionally deferred.
+
+---
+
+## 🚀 What I Would Improve With More Time
+
+- 🧪 Add unit and widget tests  
+- 📄 Implement pagination support  
+- 🔍 Improve search & filtering  
+- 🎨 Enhance animations (Hero transitions)  
+- 📶 Improve offline caching strategy  
+- 🧱 Extract shared UI components  
+
+---
+
+## ⏱ Approximate Time Spent
+
+**Total:** ~13 hours  
+
+Breakdown:
+
+- 🏗 Architecture & planning – 1.5h  
+- 📡 API integration – 2h  
+- 🔄 State management – 2h  
+- 💾 Local persistence – 2h  
+- 🌐 WebView & history – 2.5h  
+- 🎨 UI polish & testing – 2h  
+
+---
+
+## 📦 Tech Stack
+
+- 🐦 Flutter (latest stable)  
+- 🌊 Riverpod  
+- 🌐 Dio  
+- 🗄 Hive  
+- 🔎 WebView Flutter  
+
+---
+
+## 📌 Final Note
+
+ProductLoop prioritizes engineering clarity over unnecessary complexity, delivering a stable and well-structured solution within a constrained development timeline.
+
+---
+
+## 👨‍💻 Author
+
+Built with care by  
+**Mohammed Sufiyan**
+
