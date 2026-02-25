@@ -1,7 +1,7 @@
 <h1 align="center"> ♾️ ProductLoop</h1>
 
 <p align="center">
-  <em>Discover Smarter with Every Tap</em>
+  <em><b>Discover Smarter with Every Ta<b/>p</em>
 </p>
 
 <p align="center"> A clean and structured Flutter application built as part of a technical evaluation challenge.  
